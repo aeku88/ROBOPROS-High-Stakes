@@ -7,6 +7,9 @@
 
 void intakeControl()
 {
+    optical.set_led_pwm(100);
+    optical.set_integration_time(10);
+    
     while (true)
     {
         // Normal intake control
