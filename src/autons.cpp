@@ -18,7 +18,7 @@ const int SWING_SPEED = 127;
 ///
 // Constants
 ///
-void default_constants() 
+void match_constants() 
 {
     // P, I, D, and Start I
     chassis.pid_drive_constants_set(12.0, 0.0, 100.0);         // Fwd/rev constants, used for odom and non odom motions
@@ -52,6 +52,23 @@ void default_constants()
     chassis.odom_boomerang_dlead_set(0.625);     // This handles how aggressive the end of boomerang motions are
 
     chassis.pid_angle_behavior_set(ez::shortest);  // Changes the default behavior for turning, this defaults it to the shortest path there
+}
+
+void skills_constants()
+{
+    chassis.pid_heading_constants_set(4.3, .5, 50);
+    chassis.pid_drive_constants_set(12, 0, 20);
+    chassis.pid_turn_constants_set(5, 0.05, 21, 15);
+    chassis.pid_swing_constants_set(9, 0.5, 150);
+
+    chassis.pid_turn_exit_condition_set(40_ms, 2_deg, 250_ms, 3_deg, 500_ms, 500_ms);
+    chassis.pid_swing_exit_condition_set(35_ms, 3.5_deg, 250_ms, 7_deg, 500_ms, 500_ms);
+    chassis.pid_drive_exit_condition_set(20_ms, 3_in, 250_ms, 3_in, 500_ms, 500_ms);
+
+    chassis.pid_turn_chain_constant_set(3.5_deg);
+    chassis.pid_swing_chain_constant_set(7_deg);
+    chassis.pid_drive_chain_constant_set(4.5_in);
+    chassis.slew_drive_set(false);
 }
 
 void base_sawp_wq() 
@@ -163,294 +180,294 @@ void base_goal_rush()
 
 void skills()
 {
-  chassis.odom_xyt_set(72, 17, 180);
+    skills_constants();
+    chassis.odom_xyt_set(72, 17, 180);
 
-  lbSetPosition(2);
-  pros::delay(800);
-  lbSetPosition(0);
-  pros::delay(100);
-  //  
-  chassis.pid_odom_set({{102, 24}, rev, 80});
-  chassis.pid_wait();
-  pros::delay(100);
+    lbSetPosition(2);
+    pros::delay(800);
+    lbSetPosition(0);
+    pros::delay(100);
+    //  
+    chassis.pid_odom_set({{102, 24}, rev, 80});
+    chassis.pid_wait();
+    pros::delay(100);
 
-  clampCylinder.set(true);
-  chassis.pid_wait();
+    clampCylinder.set(true);
+    chassis.pid_wait();
 
-  chassis.pid_odom_set({{97, 50}, fwd, 110});
-  pros::delay(140);
-  intake.move(127);
-  chassis.pid_wait();
-  pros::delay(100);
+    chassis.pid_odom_set({{97, 50}, fwd, 110});
+    pros::delay(140);
+    intake.move(127);
+    chassis.pid_wait();
+    pros::delay(100);
 
 
-  chassis.pid_odom_set({{121, 95}, fwd, 110});
-  pros::delay(600);
-  lbSetPosition(1);
-  chassis.pid_wait();
+    chassis.pid_odom_set({{121, 95}, fwd, 110});
+    pros::delay(600);
+    lbSetPosition(1);
+    chassis.pid_wait();
 
-  chassis.pid_odom_set({{118, 72}, rev, 110});
-  chassis.pid_wait();
+    chassis.pid_odom_set({{118, 72}, rev, 110});
+    chassis.pid_wait();
 
-  /*
-  intakeMotors.move_relative(-10, 600);
-  while (intakeMotors.get_position() != intakeMotors.get_target_position())
-      pros::delay(5);
-  */
+    /*
+    intakeMotors.move_relative(-10, 600);
+    while (intakeMotors.get_position() != intakeMotors.get_target_position())
+        pros::delay(5);
+    */
 
-  intake.move(-127);
-  pros::delay(170);
-  intake.move(0);
-  pros::delay(500);
+    intake.move(-127);
+    pros::delay(170);
+    intake.move(0);
+    pros::delay(500);
 
-  // armControlCopy->setMaxVelocity(60);
+    // armControlCopy->setMaxVelocity(60);
 
-  lbSet(150);
-  pros::delay(300);
-  intake.move(127);
+    lbSet(150);
+    pros::delay(300);
+    intake.move(127);
 
-  chassis.pid_odom_set({{134, 72}, fwd, 35});
-  chassis.pid_wait();
+    chassis.pid_odom_set({{134, 72}, fwd, 35});
+    chassis.pid_wait();
 
-  // armControlCopy->setMaxVelocity(200);
+    // armControlCopy->setMaxVelocity(200);
 
-  // score on wallstake
-  lbSetPosition(2);
-  pros::delay(700);
+    // score on wallstake
+    lbSetPosition(2);
+    pros::delay(700);
 
-  // back up and arm down
-  lbSetPosition(0);
-  chassis.pid_odom_set({{123, 71}, rev, 110});
-  chassis.pid_wait();
+    // back up and arm down
+    lbSetPosition(0);
+    chassis.pid_odom_set({{123, 71}, rev, 110});
+    chassis.pid_wait();
 
-  // turn towards the last 4 rings
-  chassis.pid_odom_set({{123, 45}, fwd, 110});
-  chassis.pid_wait();
+    // turn towards the last 4 rings
+    chassis.pid_odom_set({{123, 45}, fwd, 110});
+    chassis.pid_wait();
 
-  // pick up 2nd ring
-  chassis.pid_odom_set({{123, 25}, fwd, 50});
-  chassis.pid_wait();
+    // pick up 2nd ring
+    chassis.pid_odom_set({{123, 25}, fwd, 50});
+    chassis.pid_wait();
 
-  // pick up 3rd ring
-  chassis.pid_odom_set({{123, 14}, fwd, 20});
-  chassis.pid_wait();
+    // pick up 3rd ring
+    chassis.pid_odom_set({{123, 14}, fwd, 20});
+    chassis.pid_wait();
 
-  // pick up last ring
-  chassis.pid_odom_set({{131, 24}, fwd, 50});
-  chassis.pid_wait();
+    // pick up last ring
+    chassis.pid_odom_set({{131, 24}, fwd, 50});
+    chassis.pid_wait();
 
-  // put in corner
-  chassis.pid_odom_set({{136, 11}, rev, 90});
-  chassis.pid_wait();
+    // put in corner
+    chassis.pid_odom_set({{136, 11}, rev, 90});
+    chassis.pid_wait();
 
-  intake.move(-127);
+    intake.move(-127);
 
-  pros::delay(160);
-  intake.move(0);
+    pros::delay(160);
+    intake.move(0);
 
-  clampCylinder.set(false);
-  chassis.pid_wait();
-  
-  chassis.pid_drive_constants_set(16, 0, 36); // increase kp for long movements
+    clampCylinder.set(false);
+    chassis.pid_wait();
+    
+    chassis.pid_drive_constants_set(16, 0, 36); // increase kp for long movements
 
-  chassis.pid_odom_set({{122, 95}, fwd, 127});
-  intake.move(127);
+    chassis.pid_odom_set({{122, 95}, fwd, 127});
+    intake.move(127);
 
-  lbSetPosition(1);
-  chassis.pid_wait();
+    lbSetPosition(1);
+    chassis.pid_wait();
 
-  /*--------------------------------DO NOT DELETE THE LINE RIGHTE BELOW THIS----------------------------------------------s*/
-  default_constants(); // reset pid constants for short movements
+    skills_constants(); // reset pid constants for short movements
 
-  chassis.pid_odom_set({{122, 103}, fwd, 70});
-  chassis.pid_wait();
+    chassis.pid_odom_set({{122, 103}, fwd, 70});
+    chassis.pid_wait();
 
-  // get 2nd mogo
-  chassis.pid_odom_set({{97, 123}, rev, 60});
-  chassis.pid_wait();
+    // get 2nd mogo
+    chassis.pid_odom_set({{97, 123}, rev, 60});
+    chassis.pid_wait();
 
-  intake.move(0);
+    intake.move(0);
 
-  clampCylinder.set(true);
-  chassis.pid_wait();
+    clampCylinder.set(true);
+    chassis.pid_wait();
 
-  leftDoinker.set(true);
-  
-  chassis.pid_odom_set({{120, 122}, fwd, 110});
-  chassis.pid_wait();
+    leftDoinker.set(true);
+    
+    chassis.pid_odom_set({{120, 122}, fwd, 110});
+    chassis.pid_wait();
 
-  chassis.pid_odom_set({{120, 115}, fwd, 110});
-  chassis.pid_wait();
+    chassis.pid_odom_set({{120, 115}, fwd, 110});
+    chassis.pid_wait();
 
-  leftDoinker.set(false);
+    leftDoinker.set(false);
 
-  chassis.pid_odom_set({{130, 122}, rev, 70});
-  chassis.pid_wait();
+    chassis.pid_odom_set({{130, 122}, rev, 70});
+    chassis.pid_wait();
 
-  clampCylinder.set(false);
-  chassis.pid_wait();
+    clampCylinder.set(false);
+    chassis.pid_wait();
 
-  intake.move(-127);
+    intake.move(-127);
 
-  pros::delay(200);
-  intake.move(0);
+    pros::delay(200);
+    intake.move(0);
 
-  // armControlCopy->setMaxVelocity(65);
+    // armControlCopy->setMaxVelocity(65);
 
-  lbSet(500);
-  pros::delay(300);
+    lbSet(500);
+    pros::delay(300);
 
-  chassis.pid_odom_set({{115, 105.5}, fwd, 110});
-  chassis.pid_wait();
+    chassis.pid_odom_set({{115, 105.5}, fwd, 110});
+    chassis.pid_wait();
 
-  chassis.pid_odom_set({{75.5, 105.5}, rev, 60});
-  chassis.pid_wait();
+    chassis.pid_odom_set({{75.5, 105.5}, rev, 60});
+    chassis.pid_wait();
 
-  clampCylinder.set(true);
-  pros::delay(200);
-  chassis.pid_wait();
+    clampCylinder.set(true);
+    pros::delay(200);
+    chassis.pid_wait();
 
-  chassis.pid_odom_set({{75.5, 119}, fwd, 60});
-  chassis.pid_wait();
+    chassis.pid_odom_set({{75.5, 119}, fwd, 60});
+    chassis.pid_wait();
 
-  chassis.pid_odom_set({{75.5, 113}, rev, 110});
-  chassis.pid_wait();
+    chassis.pid_odom_set({{75.5, 113}, rev, 110});
+    chassis.pid_wait();
 
-  // armControlCopy->setMaxVelocity(200);
+    // armControlCopy->setMaxVelocity(200);
 
-  lbSetPosition(2); // score
-  pros::delay(700);
+    lbSetPosition(2); // score
+    pros::delay(700);
 
-  intake.move(127);
+    intake.move(127);
 
-  lbSetPosition(0); // reset
-  pros::delay(200);
+    lbSetPosition(0); // reset
+    pros::delay(200);
 
-  // back up
+    // back up
 
-  chassis.pid_odom_set({{76, 100}, rev, 110});
-  chassis.pid_wait();
+    chassis.pid_odom_set({{76, 100}, rev, 110});
+    chassis.pid_wait();
 
-  // pick up first ring
+    // pick up first ring
 
-  chassis.pid_odom_set({{102, 79}, fwd, 80});
-  chassis.pid_wait();
+    chassis.pid_odom_set({{102, 79}, fwd, 80});
+    chassis.pid_wait();
 
-  // pick up ring in the middle
+    // pick up ring in the middle
 
-  chassis.pid_odom_set({{80, 60}, fwd, 110});
-  chassis.pid_wait();
+    chassis.pid_odom_set({{80, 60}, fwd, 110});
+    chassis.pid_wait();
 
-  // pick up the first of the 4 
+    // pick up the first of the 4 
 
-  chassis.pid_odom_set({{64, 43}, fwd, 110});
-  chassis.pid_wait();
+    chassis.pid_odom_set({{64, 43}, fwd, 110});
+    chassis.pid_wait();
 
-  // pick up the 2nd one
-  chassis.pid_odom_set({{40, 15}, fwd, 70});
-  chassis.pid_wait();
-  // pick up the 3rd
-  
-  chassis.pid_odom_set({{38, -5}, fwd, 70});
-  chassis.pid_wait();
+    // pick up the 2nd one
+    chassis.pid_odom_set({{40, 15}, fwd, 70});
+    chassis.pid_wait();
+    // pick up the 3rd
+    
+    chassis.pid_odom_set({{38, -5}, fwd, 70});
+    chassis.pid_wait();
 
-  // pick up thelast ring
+    // pick up thelast ring
 
-  chassis.pid_odom_set({{18, 8}, fwd, 70});
-  chassis.pid_wait();
+    chassis.pid_odom_set({{18, 8}, fwd, 70});
+    chassis.pid_wait();
 
-  // move to corner
+    // move to corner
 
-  chassis.pid_odom_set({{18, -4}, rev, 70});
-  chassis.pid_wait();
+    chassis.pid_odom_set({{18, -4}, rev, 70});
+    chassis.pid_wait();
 
-  intake.move(-127);
-  pros::delay(160);
-  intake.move(0);
+    intake.move(-127);
+    pros::delay(160);
+    intake.move(0);
 
-  clampCylinder.set(false);
-  chassis.pid_wait();
+    clampCylinder.set(false);
+    chassis.pid_wait();
 
-  intake.move(127);
-  lbSetPosition(1); // load
-  chassis.pid_wait();
+    intake.move(127);
+    lbSetPosition(1); // load
+    chassis.pid_wait();
 
-  // move to ring
-  chassis.pid_odom_set({{29, 30}, fwd, 110});
-  chassis.pid_wait();
+    // move to ring
+    chassis.pid_odom_set({{29, 30}, fwd, 110});
+    chassis.pid_wait();
 
-  // move to mogo
-  chassis.pid_odom_set({{60, 5}, rev, 60});
-  chassis.pid_wait();
+    // move to mogo
+    chassis.pid_odom_set({{60, 5}, rev, 60});
+    chassis.pid_wait();
 
-  clampCylinder.set(true);
-  chassis.pid_wait();
-  intake.move(0);
+    clampCylinder.set(true);
+    chassis.pid_wait();
+    intake.move(0);
 
-  pros::delay(200);
+    pros::delay(200);
 
-  chassis.pid_odom_set({{30, 52}, fwd, 110});
-  pros::delay(200);
+    chassis.pid_odom_set({{30, 52}, fwd, 110});
+    pros::delay(200);
 
-  chassis.pid_wait();
+    chassis.pid_wait();
 
-  // armControlCopy->setMaxVelocity(60);
+    // armControlCopy->setMaxVelocity(60);
 
-  lbSet(500); // hover
-  pros::delay(300);
-  intake.move(127);
+    lbSet(500); // hover
+    pros::delay(300);
+    intake.move(127);
 
 
-  chassis.pid_odom_set({{15, 52}, fwd, 60});
-  chassis.pid_wait();
+    chassis.pid_odom_set({{15, 52}, fwd, 60});
+    chassis.pid_wait();
 
-  // armControlCopy->setMaxVelocity(200);
+    // armControlCopy->setMaxVelocity(200);
 
-  // score on wallstake
-  lbSetPosition(2); // score
-  pros::delay(700);
+    // score on wallstake
+    lbSetPosition(2); // score
+    pros::delay(700);
 
-  // back up and arm down
-  intake.move(127);
+    // back up and arm down
+    intake.move(127);
 
-  lbSetPosition(0); // reset
-  pros::delay(300);
+    lbSetPosition(0); // reset
+    pros::delay(300);
 
-  chassis.pid_odom_set({{26, 52}, rev, 110});
-  chassis.pid_wait();
+    chassis.pid_odom_set({{26, 52}, rev, 110});
+    chassis.pid_wait();
 
-  // get the ring
-  chassis.pid_odom_set({{26, 75}, fwd, 110});
-  chassis.pid_wait();
+    // get the ring
+    chassis.pid_odom_set({{26, 75}, fwd, 110});
+    chassis.pid_wait();
 
-  // get the mext ring
-  chassis.pid_odom_set({{53, 85}, fwd, 110});
-  chassis.pid_wait();
+    // get the mext ring
+    chassis.pid_odom_set({{53, 85}, fwd, 110});
+    chassis.pid_wait();
 
-  // get the mext ring
-  chassis.pid_odom_set({{26, 95}, fwd, 110});
-  chassis.pid_wait();
+    // get the mext ring
+    chassis.pid_odom_set({{26, 95}, fwd, 110});
+    chassis.pid_wait();
 
-   // get the ring after that
-   chassis.pid_odom_set({{24, 105}, fwd, 60});
-   chassis.pid_wait();
+    // get the ring after that
+    chassis.pid_odom_set({{24, 105}, fwd, 60});
+    chassis.pid_wait();
 
-   // back up and get the ring after that
-   chassis.pid_odom_set({{26, 98}, rev, 110});
-   chassis.pid_wait();
+    // back up and get the ring after that
+    chassis.pid_odom_set({{26, 98}, rev, 110});
+    chassis.pid_wait();
 
-   chassis.pid_odom_set({{5, 98}, fwd, 70});
-   chassis.pid_wait();
+    chassis.pid_odom_set({{5, 98}, fwd, 70});
+    chassis.pid_wait();
 
-   // back up and clear the corner
-   chassis.pid_odom_set({{10, 75}, rev, 70});
-   chassis.pid_wait();
+    // back up and clear the corner
+    chassis.pid_odom_set({{10, 75}, rev, 70});
+    chassis.pid_wait();
 
-   leftDoinker.set(true);
+    leftDoinker.set(true);
 
-   // clear corner
-   chassis.pid_odom_set({{10, 95}, fwd, 70});
-   chassis.pid_wait();
+    // clear corner
+    chassis.pid_odom_set({{10, 95}, fwd, 70});
+    chassis.pid_wait();
 
     // place mogo in corner
     chassis.pid_odom_set({{4, 92}, rev, 110});

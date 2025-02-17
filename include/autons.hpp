@@ -1,6 +1,8 @@
 #pragma once
 
-void default_constants();
+void match_constants();
+
+void skills_constants();
 
 void base_sawp_wq(); // solo AWP for worlds qualifying events
 
