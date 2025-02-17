@@ -17,6 +17,8 @@ inline int positionIndex = 0;
 
 void lbSetPosition(int index);
 
+void lbSet(double position);
+
 void lbMoveUp();
 
 void lbMoveDown();

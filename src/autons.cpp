@@ -163,31 +163,30 @@ void base_goal_rush()
 
 void skills()
 {
-    chassis.odom_xyt_set(72, 17, 180);
+  chassis.odom_xyt_set(72, 17, 180);
 
-  armControlCopy->setTarget(480);//score
+  lbSetPosition(2);
   pros::delay(800);
-  armControlCopy->setTarget(0);//reset arm as we drive
+  lbSetPosition(0);
   pros::delay(100);
   //  
   chassis.pid_odom_set({{102, 24}, rev, 80});
   chassis.pid_wait();
   pros::delay(100);
 
-  clampCylinder.set_value(!clampState);
-  clampState = !clampState;
+  clampCylinder.set(true);
   chassis.pid_wait();
 
   chassis.pid_odom_set({{97, 50}, fwd, 110});
   pros::delay(140);
-  intakeMotors.move_velocity(intakeSpeed);
+  intake.move(127);
   chassis.pid_wait();
   pros::delay(100);
 
 
   chassis.pid_odom_set({{121, 95}, fwd, 110});
   pros::delay(600);
-  armControlCopy->setTarget(37.4);//score
+  lbSetPosition(1);
   chassis.pid_wait();
 
   chassis.pid_odom_set({{118, 72}, rev, 110});
@@ -199,28 +198,28 @@ void skills()
       pros::delay(5);
   */
 
-  intakeMotors.move_velocity(-600);
+  intake.move(-127);
   pros::delay(170);
-  intakeMotors.move_velocity(0);
+  intake.move(0);
   pros::delay(500);
 
-  armControlCopy->setMaxVelocity(60);
+  // armControlCopy->setMaxVelocity(60);
 
-  armControlCopy->setTarget(150);//score
+  lbSet(150);
   pros::delay(300);
-  intakeMotors.move_velocity(intakeSpeed);
+  intake.move(127);
 
   chassis.pid_odom_set({{134, 72}, fwd, 35});
   chassis.pid_wait();
 
-  armControlCopy->setMaxVelocity(200);
+  // armControlCopy->setMaxVelocity(200);
 
   // score on wallstake
-  armControlCopy->setTarget(310);//score
+  lbSetPosition(2);
   pros::delay(700);
 
   // back up and arm down
-  armControlCopy->setTarget(0);
+  lbSetPosition(0);
   chassis.pid_odom_set({{123, 71}, rev, 110});
   chassis.pid_wait();
 
@@ -244,19 +243,20 @@ void skills()
   chassis.pid_odom_set({{136, 11}, rev, 90});
   chassis.pid_wait();
 
-  intakeMotors.move_velocity(-500);
-  pros::delay(160);
-  intakeMotors.move_velocity(0);
+  intake.move(-127);
 
-  clampCylinder.set_value(!clampState);
-  clampState = !clampState;
+  pros::delay(160);
+  intake.move(0);
+
+  clampCylinder.set(false);
   chassis.pid_wait();
   
   chassis.pid_drive_constants_set(16, 0, 36); // increase kp for long movements
 
   chassis.pid_odom_set({{122, 95}, fwd, 127});
-  intakeMotors.move_velocity(intakeSpeed);
-  armControlCopy->setTarget(37);//score
+  intake.move(127);
+
+  lbSetPosition(1);
   chassis.pid_wait();
 
   /*--------------------------------DO NOT DELETE THE LINE RIGHTE BELOW THIS----------------------------------------------s*/
@@ -269,38 +269,35 @@ void skills()
   chassis.pid_odom_set({{97, 123}, rev, 60});
   chassis.pid_wait();
 
-  intakeMotors.move_velocity(0);
+  intake.move(0);
 
-  clampCylinder.set_value(!clampState);
-  clampState = !clampState;
+  clampCylinder.set(true);
   chassis.pid_wait();
 
-  sweeperCylinder.set_value(!sweeperState);
-  sweeperState = !sweeperState;
-
+  leftDoinker.set(true);
+  
   chassis.pid_odom_set({{120, 122}, fwd, 110});
   chassis.pid_wait();
 
   chassis.pid_odom_set({{120, 115}, fwd, 110});
   chassis.pid_wait();
 
-  sweeperCylinder.set_value(!sweeperState);
-  sweeperState = !sweeperState;
+  leftDoinker.set(false);
 
   chassis.pid_odom_set({{130, 122}, rev, 70});
   chassis.pid_wait();
 
-  clampCylinder.set_value(!clampState);
-  clampState = !clampState;
+  clampCylinder.set(false);
   chassis.pid_wait();
 
-  intakeMotors.move_velocity(-600);
+  intake.move(-127);
+
   pros::delay(200);
-  intakeMotors.move_velocity(0);
+  intake.move(0);
 
-  armControlCopy->setMaxVelocity(65);
+  // armControlCopy->setMaxVelocity(65);
 
-  armControlCopy->setTarget(150);//score
+  lbSet(500);
   pros::delay(300);
 
   chassis.pid_odom_set({{115, 105.5}, fwd, 110});
@@ -309,8 +306,7 @@ void skills()
   chassis.pid_odom_set({{75.5, 105.5}, rev, 60});
   chassis.pid_wait();
 
-  clampCylinder.set_value(!clampState);
-  clampState = !clampState;
+  clampCylinder.set(true);
   pros::delay(200);
   chassis.pid_wait();
 
@@ -320,14 +316,14 @@ void skills()
   chassis.pid_odom_set({{75.5, 113}, rev, 110});
   chassis.pid_wait();
 
-  armControlCopy->setMaxVelocity(200);
+  // armControlCopy->setMaxVelocity(200);
 
-  armControlCopy->setTarget(480);//score
+  lbSetPosition(2); // score
   pros::delay(700);
 
-  intakeMotors.move_velocity(intakeSpeed);
+  intake.move(127);
 
-  armControlCopy->setTarget(0);//score
+  lbSetPosition(0); // reset
   pros::delay(200);
 
   // back up
@@ -368,16 +364,15 @@ void skills()
   chassis.pid_odom_set({{18, -4}, rev, 70});
   chassis.pid_wait();
 
-  intakeMotors.move_velocity(-500);
+  intake.move(-127);
   pros::delay(160);
-  intakeMotors.move_velocity(0);
+  intake.move(0);
 
-  clampCylinder.set_value(!clampState);
-  clampState = !clampState;
+  clampCylinder.set(false);
   chassis.pid_wait();
 
-  intakeMotors.move_velocity(intakeSpeed);
-  armControlCopy->setTarget(37);//score
+  intake.move(127);
+  lbSetPosition(1); // load
   chassis.pid_wait();
 
   // move to ring
@@ -388,10 +383,9 @@ void skills()
   chassis.pid_odom_set({{60, 5}, rev, 60});
   chassis.pid_wait();
 
-  clampCylinder.set_value(!clampState);
-  clampState = !clampState;
+  clampCylinder.set(true);
   chassis.pid_wait();
-  intakeMotors.move_velocity(0);
+  intake.move(0);
 
   pros::delay(200);
 
@@ -400,27 +394,27 @@ void skills()
 
   chassis.pid_wait();
 
-  armControlCopy->setMaxVelocity(60);
+  // armControlCopy->setMaxVelocity(60);
 
-  armControlCopy->setTarget(150);//score
+  lbSet(500); // hover
   pros::delay(300);
-  intakeMotors.move_velocity(intakeSpeed);
+  intake.move(127);
+
 
   chassis.pid_odom_set({{15, 52}, fwd, 60});
   chassis.pid_wait();
 
-  armControlCopy->setMaxVelocity(200);
+  // armControlCopy->setMaxVelocity(200);
 
   // score on wallstake
-  armControlCopy->setTarget(310);//score
+  lbSetPosition(2); // score
   pros::delay(700);
 
   // back up and arm down
-  intakeMotors.move_velocity(intakeSpeed);
+  intake.move(127);
 
-  armControlCopy->setTarget(0);
+  lbSetPosition(0); // reset
   pros::delay(300);
-
 
   chassis.pid_odom_set({{26, 52}, rev, 110});
   chassis.pid_wait();
@@ -452,8 +446,7 @@ void skills()
    chassis.pid_odom_set({{10, 75}, rev, 70});
    chassis.pid_wait();
 
-   sweeperCylinder.set_value(!sweeperState);
-   sweeperState = !sweeperState;
+   leftDoinker.set(true);
 
    // clear corner
    chassis.pid_odom_set({{10, 95}, fwd, 70});

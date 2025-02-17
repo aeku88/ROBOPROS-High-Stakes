@@ -6,6 +6,11 @@ void lbSetPosition(int index)
     positionIndex = index;
 }
 
+void lbSet(double position)
+{
+    lbPID.target_set(position);
+}
+
 void lbMoveUp()
 {
     if (positionIndex < 3)
