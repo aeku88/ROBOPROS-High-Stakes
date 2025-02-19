@@ -7,11 +7,12 @@
 
 void intakeControl()
 {
-    optical.set_led_pwm(100);
     optical.set_integration_time(10);
+    pros::delay(100);
+    optical.set_led_pwm(100);
     
     while (true)
-    {
+    { 
         // Normal intake control
         if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
             intake.move(127); 
@@ -19,28 +20,23 @@ void intakeControl()
             intake.move(-127);
         else if (!pros::competition::is_autonomous())
             intake.move(0);
-/* 
-        if (optical.get_proximity() > detectionProximity) // Ring detected
-        {
-            // If we are red and the ring is blue
-            if (allianceColor == pros::Color::red 
+
+        if (optical.get_proximity() > detectionProximity && ((allianceColor == pros::Color::red 
             && optical.get_hue() > blueHue - hueThreshold 
-            && optical.get_hue() < blueHue + hueThreshold) 
-                sortRing(); // Sort the ring
-            
-            // If we are blue and the ring is red
-            else if (allianceColor == pros::Color::blue 
+            && optical.get_hue() < blueHue + hueThreshold) || (allianceColor == pros::Color::blue 
             && optical.get_hue() > redHue - hueThreshold 
-            && optical.get_hue() < redHue + hueThreshold)
-                sortRing(); // Sort the ring
+            && optical.get_hue() < redHue + hueThreshold))) // Ring detected
+        {
+            sortRing(); // Sort the ring
         }
-*/
+
         pros::delay(ez::util::DELAY_TIME);
     }
 }
 
 void sortRing()
 {
-    intake.move(0); // Stop the intake
-    pros::delay(500); // Delay for 500 milliseconds
+    pros::delay(60);
+    intake.move(-127); // reverse the intake
+    pros::delay(75); // Delay for 500 milliseconds
 }

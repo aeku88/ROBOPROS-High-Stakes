@@ -25,6 +25,8 @@ void lbMoveDown()
 
 void lbComputePID()
 {   
+    while (!runLB) pros::delay(ez::util::DELAY_TIME);
+
     while (true)
     {
         lbMotors.move(lbPID.compute(lbMotors.get_position()));

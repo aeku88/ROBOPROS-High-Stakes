@@ -3,6 +3,7 @@
 #include "intake.hpp"
 #include "lbArm.hpp"
 #include "main.h"
+#include "pros/rtos.hpp"
 #include "subsystems.hpp"
 
 /////
@@ -21,9 +22,9 @@ const int SWING_SPEED = 127;
 void match_constants() 
 {
     // P, I, D, and Start I
-    chassis.pid_drive_constants_set(12.0, 0.0, 100.0);         // Fwd/rev constants, used for odom and non odom motions
-    chassis.pid_heading_constants_set(11.0, 0.0, 20.0);        // Holds the robot straight while going forward without odom
-    chassis.pid_turn_constants_set(3.0, 0.05, 20.0, 15.0);     // Turn in place constants
+    chassis.pid_drive_constants_set(9.5, 0, 7);         // Fwd/rev constants, used for odom and non odom motions
+    chassis.pid_heading_constants_set(9, 0.0, 7);        // Holds the robot straight while going forward without odom
+    chassis.pid_turn_constants_set(0, 0, 0);     // Turn in place constants
     chassis.pid_swing_constants_set(6.0, 0.0, 65.0);           // Swing constants
     chassis.pid_odom_angular_constants_set(6.5, 0.0, 52.5);    // Angular control for odom motions
     chassis.pid_odom_boomerang_constants_set(5.8, 0.0, 32.5);  // Angular control for boomerang motions
@@ -31,16 +32,16 @@ void match_constants()
     // Exit conditions
     chassis.pid_turn_exit_condition_set(50_ms, 4_deg, 250_ms, 7_deg, 500_ms, 500_ms);
     chassis.pid_swing_exit_condition_set(50_ms, 4_deg, 250_ms, 7_deg, 500_ms, 500_ms);
-    chassis.pid_drive_exit_condition_set(50_ms, 2.5_in, 250_ms, 5_in, 500_ms, 500_ms);
+    chassis.pid_drive_exit_condition_set(70_ms, .5_in, 400_ms, 3_in, 200_ms, 200_ms);
     chassis.pid_odom_turn_exit_condition_set(90_ms, 3_deg, 250_ms, 7_deg, 500_ms, 750_ms);
-    chassis.pid_odom_drive_exit_condition_set(90_ms, 1_in, 250_ms, 3_in, 500_ms, 750_ms);
+    chassis.pid_odom_drive_exit_condition_set(90_ms, .5_in, 250_ms, 3_in, 500_ms, 750_ms);
     chassis.pid_turn_chain_constant_set(6_deg);
     chassis.pid_swing_chain_constant_set(5_deg);
-    chassis.pid_drive_chain_constant_set(4_in);
+    chassis.pid_drive_chain_constant_set(6_in);
 
     // Slew constants
     chassis.slew_turn_constants_set(3_deg, 70);
-    chassis.slew_drive_constants_set(3_in, 70);
+    chassis.slew_drive_constants_set(4_in, 40);
     chassis.slew_swing_constants_set(3_in, 80);
 
     // The amount that turns are prioritized over driving in odom motions
@@ -57,18 +58,26 @@ void match_constants()
 void skills_constants()
 {
     chassis.pid_heading_constants_set(4.3, .5, 50);
-    chassis.pid_drive_constants_set(12, 0, 20);
-    chassis.pid_turn_constants_set(5, 0.05, 21, 15);
+    chassis.pid_drive_constants_set(13, 0, 21);
+    chassis.pid_turn_constants_set(4, 0.05, 21, 15);
     chassis.pid_swing_constants_set(9, 0.5, 150);
 
     chassis.pid_turn_exit_condition_set(40_ms, 2_deg, 250_ms, 3_deg, 500_ms, 500_ms);
     chassis.pid_swing_exit_condition_set(35_ms, 3.5_deg, 250_ms, 7_deg, 500_ms, 500_ms);
-    chassis.pid_drive_exit_condition_set(20_ms, 3_in, 250_ms, 3_in, 500_ms, 500_ms);
+    chassis.pid_drive_exit_condition_set(50_ms, 2_in, 250_ms, 3_in, 500_ms, 500_ms);
 
     chassis.pid_turn_chain_constant_set(3.5_deg);
     chassis.pid_swing_chain_constant_set(7_deg);
-    chassis.pid_drive_chain_constant_set(4.5_in);
+    chassis.pid_drive_chain_constant_set(5.5_in);
     chassis.slew_drive_set(false);
+}
+
+void pid_tuning()
+{
+    match_constants();
+
+    chassis.pid_drive_set(48, 127);
+    chassis.pid_wait();
 }
 
 void base_sawp_wq() 
@@ -188,9 +197,9 @@ void skills()
     lbSetPosition(0);
     pros::delay(100);
     //  
-    chassis.pid_odom_set({{102, 24}, rev, 80});
+    chassis.pid_odom_set({{102, 24}, rev, 75});
     chassis.pid_wait();
-    pros::delay(100);
+    pros::delay(200);
 
     clampCylinder.set(true);
     chassis.pid_wait();
@@ -201,14 +210,17 @@ void skills()
     chassis.pid_wait();
     pros::delay(100);
 
-
     chassis.pid_odom_set({{121, 95}, fwd, 110});
-    pros::delay(600);
-    lbSetPosition(1);
+   // lbSetPosition(1);
+    //lbSet(185);
     chassis.pid_wait();
 
-    chassis.pid_odom_set({{118, 72}, rev, 110});
+    // pros::delay(800);
+
+    chassis.pid_odom_set({{118, 70}, rev, 50});
     chassis.pid_wait();
+    lbSetPosition(1);
+    pros::delay(700);
 
     /*
     intakeMotors.move_relative(-10, 600);
@@ -216,29 +228,47 @@ void skills()
         pros::delay(5);
     */
 
-    intake.move(-127);
-    pros::delay(170);
+   // pros::delay(200);
+/* 
+    intake.move(-50);
+    pros::delay(80);
     intake.move(0);
     pros::delay(500);
 
     // armControlCopy->setMaxVelocity(60);
+    lbPID.constants_set(.1, 0, 0.07); // increase deceleration
 
-    lbSet(150);
+    // lbSet(700);
     pros::delay(300);
     intake.move(127);
 
-    chassis.pid_odom_set({{134, 72}, fwd, 35});
+    chassis.pid_odom_set({{134, 69}, fwd, 35});
     chassis.pid_wait();
 
     // armControlCopy->setMaxVelocity(200);
+    lbPID.constants_set(.7, 0.0, 0.7); // revert to normal
+*/
 
     // score on wallstake
+    chassis.pid_odom_set({{135, 70}, fwd, 35});
+
+    chassis.pid_wait();
+
+    intake.move(-30);
+    pros::delay(70);
+    intake.move(0);
+    pros::delay(300);
+
+    chassis.pid_odom_set({{136, 70}, fwd, 35});
     lbSetPosition(2);
+
+    chassis.pid_wait();
+
     pros::delay(700);
 
     // back up and arm down
     lbSetPosition(0);
-    chassis.pid_odom_set({{123, 71}, rev, 110});
+    chassis.pid_odom_set({{123, 70}, rev, 110});
     chassis.pid_wait();
 
     // turn towards the last 4 rings
@@ -250,7 +280,7 @@ void skills()
     chassis.pid_wait();
 
     // pick up 3rd ring
-    chassis.pid_odom_set({{123, 14}, fwd, 20});
+    chassis.pid_odom_set({{123, 14}, fwd, 40});
     chassis.pid_wait();
 
     // pick up last ring
@@ -417,13 +447,17 @@ void skills()
     pros::delay(300);
     intake.move(127);
 
-
     chassis.pid_odom_set({{15, 52}, fwd, 60});
     chassis.pid_wait();
 
     // armControlCopy->setMaxVelocity(200);
 
     // score on wallstake
+    intake.move(-30);
+    pros::delay(70);
+    intake.move(0);
+    pros::delay(300); 
+
     lbSetPosition(2); // score
     pros::delay(700);
 

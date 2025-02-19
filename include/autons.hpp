@@ -13,3 +13,5 @@ void base_goal_side(); // scores four rings on mobile goal and sets up for third
 void base_goal_rush(); // rushes and scores one ring on third goal and scores two rings on mobile goal
 
 void skills(); // programming skills
+
+void pid_tuning();

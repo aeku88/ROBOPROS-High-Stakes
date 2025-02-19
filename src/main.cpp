@@ -16,7 +16,7 @@ ez::Drive chassis(
     {7, 8, 9},  // Right Chassis Ports (negative port will reverse it!)
 
     2,      // IMU Port
-    2.75,  // Wheel Diameter (Remember, 4" wheels without screw holes are actually 4.125!)
+    2.925,  // Wheel Diameter (Remember, 4" wheels without screw holes are actually 4.125!)
     450 // Wheel RPM = cartridge * (motor gear / wheel gear)
 );   
 
@@ -162,17 +162,21 @@ void initialize()
     // Set the drive to your own constants from autons.cpp!
     match_constants();
 
+    
+    pros::Task lbComputePIDTask(lbComputePID);
     // These are already defaulted to these buttons, but you can change the left/right curve buttons here!
     // chassis.opcontrol_curve_buttons_left_set(pros::E_CONTROLLER_DIGITAL_LEFT, pros::E_CONTROLLER_DIGITAL_RIGHT);  // If using tank, only the left side is used.
     // chassis.opcontrol_curve_buttons_right_set(pros::E_CONTROLLER_DIGITAL_Y, pros::E_CONTROLLER_DIGITAL_A);
 
     // Autonomous Selector using LLEMU
     ez::as::auton_selector.autons_add({
+        Auton("PID TUNING", pid_tuning),
+        Auton("Skills", skills),
         Auton("Base Sawp WQ", base_sawp_wq),
         Auton("Base Ring Rush", base_ring_rush),
         Auton("Base Goal Side", base_goal_side),
-        Auton("Base Goal Rush", base_goal_rush),
-        Auton("Skills", skills)
+        Auton("Base Goal Rush", base_goal_rush)
+        
     });
     
     // Reset/configuring sensors
@@ -232,7 +236,9 @@ void autonomous()
   
   chassis.drive_brake_set(MOTOR_BRAKE_HOLD);  // Set motors to hold.  This helps autonomous consistency
   
-  pros::Task lbComputePIDTask(lbComputePID);  // Lady Brown arm PID control task
+  // pros::Task lbComputePIDTask(lbComputePID);  // Lady Brown arm PID control task
+  
+  runLB = true;
   lbMotors.set_brake_mode(pros::MotorBrake::hold); 
 
   /*
@@ -266,13 +272,14 @@ void autonomous()
  */
 void opcontrol() 
 {
+    runLB = true;
     // This is preference to what you like to drive on
     chassis.drive_brake_set(MOTOR_BRAKE_COAST);
 
     while (true) 
     {
         // Gives you some extras to make EZ-Template ezier
-        // ez_template_extras();
+        ez_template_extras();
 
         // chassis.opcontrol_tank();  // Tank control
         chassis.opcontrol_arcade_standard(ez::SPLIT);   // Standard split arcade
@@ -287,6 +294,10 @@ void opcontrol()
             lbMoveUp();
         else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2))
             lbMoveDown();
+
+        leftDoinker.button_toggle(master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT));
+
+        clampCylinder.button_toggle(master.get_digital(pros::E_CONTROLLER_DIGITAL_Y));
 
         pros::delay(ez::util::DELAY_TIME);  // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
     }
