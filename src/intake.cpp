@@ -39,4 +39,5 @@ void sortRing()
     pros::delay(60);
     intake.move(-127); // reverse the intake
     pros::delay(75); // Delay for 500 milliseconds
+    intake.move(127);
 }

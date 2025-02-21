@@ -14,7 +14,7 @@ inline pros::Motor lb_motor(18);
 
 inline ez::PID lbPID(.5, 0.0, 0.5, 0.0, "Lady Brown");
 
-inline double heights[4] = {0.0, 156, 1600.0, 2000.0};
+inline double heights[4] = {0.0, 156 , 1600.0, 2000.0};
 
 // used to be 176
 

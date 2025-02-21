@@ -170,13 +170,13 @@ void initialize()
 
     // Autonomous Selector using LLEMU
     ez::as::auton_selector.autons_add({
-        Auton("PID TUNING", pid_tuning),
-        Auton("Skills", skills),
         Auton("Base Sawp WQ", base_sawp_wq),
+        Auton("Skills", skills),
         Auton("Base Ring Rush", base_ring_rush),
         Auton("Base Goal Side", base_goal_side),
-        Auton("Base Goal Rush", base_goal_rush)
-        
+        Auton("Base Goal Rush", base_goal_rush),
+        Auton("PID TUNING", pid_tuning)
+
     });
     
     // Reset/configuring sensors
