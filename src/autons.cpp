@@ -22,11 +22,11 @@ const int SWING_SPEED = 127;
 void match_constants() 
 {
     // P, I, D, and Start I
-    chassis.pid_drive_constants_set(9.5, 0, 7);         // Fwd/rev constants, used for odom and non odom motions
-    chassis.pid_heading_constants_set(4.3, 0, 50);        // Holds the robot straight while going forward without odom
+    chassis.pid_drive_constants_set(9.5, 0, 6.5);         // Fwd/rev constants, used for odom and non odom motions
+    chassis.pid_heading_constants_set(5.5, 0, 30);        // Holds the robot straight while going forward without odom
     chassis.pid_turn_constants_set(4, 0.05, 21, 15);     // Turn in place constants
     chassis.pid_swing_constants_set(6.0, 0.0, 65.0);           // Swing constants
-    chassis.pid_odom_angular_constants_set(6.5, 0.0, 52.5);    // Angular control for odom motions
+    chassis.pid_odom_angular_constants_set(6.5, 0.0, 50);    // Angular control for odom motions
     chassis.pid_odom_boomerang_constants_set(5.8, 0.0, 32.5);  // Angular control for boomerang motions
 
     // Exit conditions
@@ -34,14 +34,15 @@ void match_constants()
     chassis.pid_swing_exit_condition_set(50_ms, 4_deg, 250_ms, 7_deg, 500_ms, 500_ms);
     chassis.pid_drive_exit_condition_set(50_ms, 1.5_in, 250_ms, 3_in, 200_ms, 200_ms);
     chassis.pid_odom_turn_exit_condition_set(90_ms, 3_deg, 250_ms, 7_deg, 500_ms, 750_ms);
-    chassis.pid_odom_drive_exit_condition_set(90_ms, 1_in, 250_ms, 3_in, 500_ms, 750_ms);
+    chassis.pid_odom_drive_exit_condition_set(75_ms, 1.5_in, 250_ms, 3_in, 300_ms, 300_ms);
     chassis.pid_turn_chain_constant_set(4_deg);
     chassis.pid_swing_chain_constant_set(5_deg);
     chassis.pid_drive_chain_constant_set(3_in);
 
     // Slew constants
+    chassis.slew_drive_set(true);
     chassis.slew_turn_constants_set(3_deg, 70);
-    chassis.slew_drive_constants_set(4_in,60);
+    chassis.slew_drive_constants_set(5_in,50);
     chassis.slew_swing_constants_set(3_in, 80);
 
     // The amount that turns are prioritized over driving in odom motions
@@ -85,58 +86,55 @@ void base_sawp_wq()
     allianceColor = pros::Color::red;
     chassis.odom_xyt_set(60, 17.125, 90);
 
-    chassis.pid_odom_set({{62, 15}, fwd, 80});
+    chassis.pid_odom_set({{62, 15}, fwd, 100});
     chassis.pid_wait();
 
     lbSetPosition(2);
 
     pros::delay(400);
 
-    chassis.pid_odom_set({{46, 48}, rev, 110});
+    chassis.pid_odom_set({{48, 54}, rev, 127});
     chassis.pid_wait();
-
-    chassis.pid_drive_set(-8_in, DRIVE_SPEED/1.5);
-
-   // chassis.pid_odom_set({{48, 48}, rev, 60});
-  //  chassis.pid_wait();
 
     lbSetPosition(0);
 
     clampCylinder.set(true);
 
-    pros::delay(300);
+    pros::delay(250);
 
     intake.move(127);
 
-    chassis.pid_odom_set({{37, 61}, fwd, 110});
+    chassis.pid_odom_set({{35, 59}, fwd, 127});
+    chassis.pid_wait_quick_chain();
+
+    chassis.pid_turn_set(-90, 127);
     chassis.pid_wait();
 
-   // chassis.pid_odom_set({{30, 60}, fwd, 50});
-   // chassis.pid_wait();
+    chassis.pid_odom_set(12_in, 40);
+    chassis.pid_wait_quick_chain();
 
-    chassis.pid_odom_set({{17, 63}, fwd, 50});
+    chassis.pid_odom_set({{38, 53}, rev, 127});
+    chassis.pid_wait_quick_chain();
+
+    chassis.pid_odom_set({{28, 48}, fwd, 127});
     chassis.pid_wait();
 
-    // back up
-    chassis.pid_odom_set({{38, 53}, rev, 110});
+    chassis.pid_odom_set({{52, 23}, fwd, 127});
+    intake.move(0);
+    pros::delay(300);
+    intake.move(127);
     chassis.pid_wait();
 
-    chassis.pid_odom_set({{20, 39}, fwd, 110});
-    chassis.pid_wait();
-
-    chassis.pid_odom_set({{72, 23}, fwd, 110});
+    chassis.pid_odom_set({{95, 23}, fwd, 80});
     chassis.pid_wait();
 
     clampCylinder.set(false);
 
-    chassis.pid_drive_set(28_in, DRIVE_SPEED/2);
-    chassis.pid_wait();
-
-    pros::delay(300);
+    pros::delay(150);
 
     intake.move(0);
 
-    chassis.pid_odom_set({{98, 50}, rev, 110});
+    chassis.pid_odom_set({{98, 50}, rev, 127});
     chassis.pid_wait();
 
     clampCylinder.set(true);
@@ -145,107 +143,13 @@ void base_sawp_wq()
 
     intake.move(127);
 
-    chassis.pid_odom_set({{116, 50}, fwd, 110});
-    chassis.pid_wait();
-
-    // intake.move(127);
-
-    chassis.pid_odom_set({{70, 70}, rev, 110});
-    chassis.pid_wait();
-
-   // chassis.pid_odom_set({{100, 17}, fwd, 110});
-    // chassis.pid_wait();
-
-    // chassis.pid_odom_set({{, 34}, rev, 110});
-    // chassis.pid_wait();
-
-    /*  OLD PID AUTO
-    allianceColor = pros::Color::red;
-    chassis.pid_heading_constants_set(0, 0, 0);
-
-    lbSetPosition(2);//score
-    pros::delay(800);
-    chassis.pid_drive_set(-11_in, DRIVE_SPEED/1.125);
-    lbSetPosition(0);//reset arm as we drive
-    chassis.pid_wait_quick_chain();
-    chassis.pid_turn_set(0_deg, TURN_SPEED);
-    chassis.pid_heading_constants_set(4.3, 0.0, 50.0);
-    chassis.pid_wait_quick_chain();
-    chassis.pid_drive_set(-24_in, DRIVE_SPEED);//approaching at full speed
-    chassis.pid_wait_quick_chain();
-
-   // chassis.pid_drive_set(-4_in, DRIVE_SPEED/2);//approaching at half speed
-
-   // chassis.pid_wait_quick_chain();
-    //chassis.pid_drive_set(-2_in, DRIVE_SPEED/1.5);//slow approach to mogo with 8 inches exccess
-    chassis.pid_wait();
-    clampCylinder.set(true);
-    //pros::delay(50);//tune to see how low this can go without sacrificng consistency
-    //chassis.pid_drive_set(_in, DRIVE_SPEED);//reverting 4 inchES excess 
-    chassis.pid_wait_quick_chain();
-    chassis.pid_turn_set(130_deg, TURN_SPEED);
-    chassis.pid_wait_quick_chain();
-    intake.move(127);//preload scored
-    chassis.pid_drive_set(14_in, DRIVE_SPEED);//appraoching ring 1
-    chassis.pid_wait_quick_chain();
-    chassis.pid_turn_set(90, TURN_SPEED);
-    chassis.pid_wait_quick_chain();
-    chassis.pid_drive_set(9, DRIVE_SPEED/1.5);// approach to ring 2
-    chassis.pid_wait_quick_chain();
-
-    chassis.pid_swing_set(ez::RIGHT_SWING, -60_deg, SWING_SPEED, 0);//turning to ring 3 about the right side
-   // intake.move(0);
-    chassis.pid_wait_quick_chain();
-    chassis.pid_drive_set(14_in, DRIVE_SPEED / 1.4);//getting ring 3
-    chassis.pid_wait_quick_chain();
-
-    chassis.pid_drive_set(34_in, DRIVE_SPEED / 2); // drive straight after 
-    chassis.pid_wait_quick_chain();
-
-    chassis.pid_turn_set(-90_deg, TURN_SPEED);
-    chassis.pid_wait_quick_chain();
-
-    chassis.pid_drive_set(34_in, DRIVE_SPEED / 2.5);
-    chassis.pid_wait_quick_chain();
-
-    chassis.pid_turn_set(135_deg, TURN_SPEED);
-    chassis.pid_wait_quick_chain();
-
-    clampCylinder.set(false);
-    chassis.pid_wait_quick_chain();
-
-    chassis.pid_turn_set(0_deg, TURN_SPEED);
-    chassis.pid_wait_quick_chain(); 
-
-    intake.move(0);
-    chassis.pid_wait_quick_chain();
-
-
-    chassis.pid_drive_set(-10_in, DRIVE_SPEED);
-    chassis.pid_wait_quick_chain(); 
-
-    chassis.pid_drive_set(-4_in, DRIVE_SPEED/2);
-    chassis.pid_wait_quick_chain(); 
-
-    clampCylinder.set(true);
-    chassis.pid_wait_quick_chain();
-
-    chassis.pid_turn_set(-90_deg, TURN_SPEED);
-    chassis.pid_wait_quick_chain(); 
-
-    intake.move(127);
+    chassis.pid_odom_set({{115, 50}, fwd, 127});
     chassis.pid_wait_quick_chain();
     
-    chassis.pid_drive_set(18_in, DRIVE_SPEED);
-    chassis.pid_wait_quick_chain();
-
-    chassis.pid_turn_set(-75_deg, TURN_SPEED);
-    chassis.pid_wait_quick_chain(); 
-
-    chassis.pid_drive_set(-30_in, DRIVE_SPEED / 2);
-    chassis.pid_wait_quick_chain();
-*/
+    chassis.pid_odom_set({{90, 60}, rev, 127});
+    chassis.pid_wait();
 }
+
 void base_ring_rush() 
 {
     allianceColor = pros::Color::red;

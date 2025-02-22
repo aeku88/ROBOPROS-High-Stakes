@@ -12,8 +12,8 @@ inline pros::Optical optical(17); // Optical sensor used to "color sort" rings
 inline pros::Color allianceColor = pros::Color::red; /* Color of alliance */
 inline uint8_t redHue = 5, /* Hue value for red */
                blueHue = 230,/* Hue value for blue */
-               detectionProximity = 210, /* Maximum distance used to start sensing rings — larger values indicate smaller distance*/
-               hueThreshold = 10; /* Threshold for hue values */
+               detectionProximity = 220, /* Maximum distance used to start sensing rings — larger values indicate smaller distance*/
+               hueThreshold = 8; /* Threshold for hue values */
                
 void intakeControl();
 
