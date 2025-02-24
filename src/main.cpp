@@ -1,4 +1,5 @@
 #include "main.h"
+#include "EZ-Template/auton_selector.hpp"
 #include "autons.hpp"
 #include "lbArm.hpp"
 #include "pros/abstract_motor.hpp"
@@ -170,13 +171,13 @@ void initialize()
 
     // Autonomous Selector using LLEMU
     ez::as::auton_selector.autons_add({
-        Auton("Base Sawp WQ", base_sawp_wq),
         Auton("Skills", skills),
-        Auton("Base Ring Rush", base_ring_rush),
         Auton("Base Goal Side", base_goal_side),
+        Auton("Blue Sawp WQ", blue_sawp_wq),
+        Auton("Red Sawp WQ", red_sawp_wq),
+        Auton("Base Ring Rush", base_ring_rush),
         Auton("Base Goal Rush", base_goal_rush),
-        Auton("PID TUNING", pid_tuning)
-
+        Auton("PID TUNING", pid_tuning),
     });
     
     // Reset/configuring sensors

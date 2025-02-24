@@ -9,6 +9,7 @@ extern Drive chassis;
 
 inline ez::Piston clampCylinder('H');
 inline ez::Piston leftDoinker('G');
+inline ez::Piston rightDoinker('E');
 
 // inline pros::Motor intake(1);
 // inline pros::adi::DigitalIn limit_switch('A');
